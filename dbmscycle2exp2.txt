@@ -1,0 +1,618 @@
+mysql -u s2mcabatch2 -p;
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.36-0ubuntu0.20.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create database company;
+Query OK, 1 row affected (0.14 sec)
+
+mysql> use company;
+Database changed
+mysql> create table jobs(jod_id int primary key,job_title varchar(20),min_salary int,max_salary int);
+Query OK, 0 rows affected (0.59 sec)
+
+mysql> desc jobs;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| jod_id     | int         | NO   | PRI | NULL    |       |
+| job_title  | varchar(20) | YES  |     | NULL    |       |
+| min_salary | int         | YES  |     | NULL    |       |
+| max_salary | int         | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> create table regions(region_id int primary key,region_name varchar(30));
+Query OK, 0 rows affected (0.99 sec)
+
+mysql> desc regions;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| region_id   | int         | NO   | PRI | NULL    |       |
+| region_name | varchar(30) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> create table countries(country_id int primary key,country_name varchar(30),region_id int,foreign key(region_id)reference regions(region_id));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'reference regions(region_id))' at line 1
+mysql> create table countries(country_id int primary key,country_name varchar(30),region_id int,foreign key(region_id)references regions(region_id));
+Query OK, 0 rows affected (0.77 sec)
+
+mysql> desc countries
+    -> desc countries;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'desc countries' at line 2
+mysql> desc countries;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| country_id   | int         | NO   | PRI | NULL    |       |
+| country_name | varchar(30) | YES  |     | NULL    |       |
+| region_id    | int         | YES  | MUL | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table locations(location_id int primary key,street_address varchar(30),postal_code varchar(20),city varchar(30),state_province varchar(30),country_id int,foreign key(country_id)references countries(country_id));
+Query OK, 0 rows affected (0.90 sec)
+
+mysql> desc locations;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| location_id    | int         | NO   | PRI | NULL    |       |
+| street_address | varchar(30) | YES  |     | NULL    |       |
+| postal_code    | varchar(20) | YES  |     | NULL    |       |
+| city           | varchar(30) | YES  |     | NULL    |       |
+| state_province | varchar(30) | YES  |     | NULL    |       |
+| country_id     | int         | YES  | MUL | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+6 rows in set (0.01 sec)
+
+mysql> create table departments(department_id int primery key,department_name varchar(30),location_id int,foreign key(location_id)references locations(location_id));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'primery key,department_name varchar(30),location_id int,foreign key(location_id)' at line 1
+mysql> create table departments(department_id int primary key,department_name varchar(30),location_id int,foreign key(location_id)references locations(location_id));
+Query OK, 0 rows affected (0.90 sec)
+
+mysql> desc departments;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| department_id   | int         | NO   | PRI | NULL    |       |
+| department_name | varchar(30) | YES  |     | NULL    |       |
+| location_id     | int         | YES  | MUL | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table employees(employee_id int primary key,first_name varchar(10),last_name varchar(10),email varchar(50),phone_number int(10),hire_date date,job_id int,salary int manager_id int,department_id,foreign key(department_id)refernces departments(department_id));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'manager_id int,department_id,foreign key(department_id)refernces departments(dep' at line 1
+mysql> create table employees(employee_id int primary key,first_name varchar(10),last_name varchar(10),email varchar(50),phone_number int(10),hire_date date,job_id int,salary int,manager_id int,department_id,foreign key(department_id)refernces departments(department_id));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',foreign key(department_id)refernces departments(department_id))' at line 1
+mysql> create table employees(employee_id int primary key,first_name varchar(10),last_name varchar(10),email varchar(50),phone_number int(10),hire_date date,job_id int,salary int,manager_id int,department_id,foreign key(department_id)refernces departments(department_id));        
+create table employees(employee_id int primary key,first_name varchar(10),last_name varchar(10),email varchar(50),phone_number int(10),hire_date date,job_id int,salary int,manager_id int,department_id,foreign key(department_id)refernces departments(department_id));
+^C
+mysql> create table employees(employee_id int primary key,first_name varchar(10),last_name varchar(10),email varchar(50),phone_number int,hire_date date,job_id int,salary int,manager_id int,department_id,foreign key(department_id)refernces departments(department_id));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',foreign key(department_id)refernces departments(department_id))' at line 1
+mysql> create table employees(employee_id int primary key,first_name varchar(10),last_name varchar(10),email varchar(50),phone_number int,hire_date date,job_id int,salary int,manager_id int,department_id int,foreign key(department_id)refernces departments(department_id));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'refernces departments(department_id))' at line 1
+mysql> create table employees(employee_id int primary key,first_name varchar(10),last_name varchar(10),email varchar(50),phone_number int,hire_date date,job_id int,salary int,manager_id int,department_id int,foreign key(department_id)references departments(department_id));
+Query OK, 0 rows affected (0.93 sec)
+
+mysql> desc employees;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| employee_id   | int         | NO   | PRI | NULL    |       |
+| first_name    | varchar(10) | YES  |     | NULL    |       |
+| last_name     | varchar(10) | YES  |     | NULL    |       |
+| email         | varchar(50) | YES  |     | NULL    |       |
+| phone_number  | int         | YES  |     | NULL    |       |
+| hire_date     | date        | YES  |     | NULL    |       |
+| job_id        | int         | YES  |     | NULL    |       |
+| salary        | int         | YES  |     | NULL    |       |
+| manager_id    | int         | YES  |     | NULL    |       |
+| department_id | int         | YES  | MUL | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+10 rows in set (0.01 sec)
+
+mysql> show tables;
++-------------------+
+| Tables_in_company |
++-------------------+
+| countries         |
+| departments       |
+| employees         |
+| jobs              |
+| locations         |
+| regions           |
++-------------------+
+6 rows in set (0.01 sec)
+
+mysql> create table dependents(dependent_id int primary key,first_name varchar(10) not null,last_name varchar(10) not null,relationship varchar(20),employee_id int,foreign key(employee_id)references emplyees(employee_id)on delete cascade);
+ERROR 1824 (HY000): Failed to open the referenced table 'emplyees'
+mysql> create table dependents(dependent_id int primary key,first_name varchar(10) not null,last_name varchar(10) not null,relationship varchar(20),employee_id int,foreign key(employee_id)references employees(employee_id)on delete cascade);
+Query OK, 0 rows affected (1.75 sec)
+
+mysql> desc dependents;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| dependent_id | int         | NO   | PRI | NULL    |       |
+| first_name   | varchar(10) | NO   |     | NULL    |       |
+| last_name    | varchar(10) | NO   |     | NULL    |       |
+| relationship | varchar(20) | YES  |     | NULL    |       |
+| employee_id  | int         | YES  | MUL | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> show tables;
++-------------------+
+| Tables_in_company |
++-------------------+
+| countries         |
+| departments       |
+| dependents        |
+| employees         |
+| jobs              |
+| locations         |
+| regions           |
++-------------------+
+7 rows in set (0.00 sec)
+
+mysql> insert into jobs values(001,"manager",10000,16000);
+Query OK, 1 row affected (0.16 sec)
+
+mysql> insert into jobs values(002,"analyst",8000,12000);
+Query OK, 1 row affected (0.14 sec)
+
+mysql> insert into jobs values(003,"developer",7000,13000);
+Query OK, 1 row affected (0.10 sec)
+
+mysql> insert into jobs values(004,"clerk",5000,9000);
+Query OK, 1 row affected (0.09 sec)
+
+mysql> insert into jobs values(005,"intern",4000,8000);
+Query OK, 1 row affected (0.09 sec)
+
+mysql> insert into jobs values(006,"hr",3000,18000);
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select *from jobs;
++--------+-----------+------------+------------+
+| jod_id | job_title | min_salary | max_salary |
++--------+-----------+------------+------------+
+|      1 | manager   |      10000 |      16000 |
+|      2 | analyst   |       8000 |      12000 |
+|      3 | developer |       7000 |      13000 |
+|      4 | clerk     |       5000 |       9000 |
+|      5 | intern    |       4000 |       8000 |
+|      6 | hr        |       3000 |      18000 |
++--------+-----------+------------+------------+
+6 rows in set (0.00 sec)
+
+mysql> INSERT INTO regions (region_id, region_name)
+    -> VALUES
+    -> (1, 'North America'),
+    -> (2, 'Europe'),
+    -> (3, 'Asia'),
+    -> (4, 'Africa'),
+    -> (5, 'Australia');
+Query OK, 5 rows affected (0.10 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select *from regions;
++-----------+---------------+
+| region_id | region_name   |
++-----------+---------------+
+|         1 | North America |
+|         2 | Europe        |
+|         3 | Asia          |
+|         4 | Africa        |
+|         5 | Australia     |
++-----------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO countries (country_id, country_name, region_id)
+    -> VALUES
+    -> (1, 'United States', 1),
+    -> (2, 'Canada', 1),
+    -> (3, 'Germany', 2),
+    -> (4, 'France', 2),
+    -> (5, 'China', 3),
+    -> (6, 'Japan', 3),
+    -> (7, 'Nigeria', 4),
+    -> (8, 'South Africa', 4),
+    -> (9, 'Australia', 5);
+Query OK, 9 rows affected (0.16 sec)
+Records: 9  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO locations (location_id, street_address, postal_code, city, state_province, country_id)
+    -> VALUES
+    -> (1, '123 Elm St', '90210', 'Beverly Hills', 'California', 1),
+    -> (2, '456 Maple Ave', '10001', 'New York', 'New York', 1),
+    -> (3, '789 Oak Rd', '20001', 'Washington', 'District of Columbia', 2),
+    -> (4, '101 Pine Blvd', '75001', 'Dallas', 'Texas', 1),
+    -> (5, '202 Birch Ln', '75001', 'Frisco', 'Texas', 3),
+    -> (6, '303 Cedar Dr', '50001', 'Tokyo', 'Tokyo', 6),
+    -> (7, '404 Walnut Way', '60001', 'Berlin', 'Berlin', 3),
+    -> (8, '505 Maple St', '70001', 'Paris', 'Ile-de-France', 2);
+Query OK, 8 rows affected (0.13 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+mysql> select *from locations;
++-------------+----------------+-------------+---------------+----------------------+------------+
+| location_id | street_address | postal_code | city          | state_province       | country_id |
++-------------+----------------+-------------+---------------+----------------------+------------+
+|           1 | 123 Elm St     | 90210       | Beverly Hills | California           |          1 |
+|           2 | 456 Maple Ave  | 10001       | New York      | New York             |          1 |
+|           3 | 789 Oak Rd     | 20001       | Washington    | District of Columbia |          2 |
+|           4 | 101 Pine Blvd  | 75001       | Dallas        | Texas                |          1 |
+|           5 | 202 Birch Ln   | 75001       | Frisco        | Texas                |          3 |
+|           6 | 303 Cedar Dr   | 50001       | Tokyo         | Tokyo                |          6 |
+|           7 | 404 Walnut Way | 60001       | Berlin        | Berlin               |          3 |
+|           8 | 505 Maple St   | 70001       | Paris         | Ile-de-France        |          2 |
++-------------+----------------+-------------+---------------+----------------------+------------+
+8 rows in set (0.00 sec)
+
+mysql> INSERT INTO departments (department_id, department_name, location_id)
+    -> VALUES
+    -> (1, 'Sales', 1),
+    -> (2, 'Marketing', 2),
+    -> (3, 'Human Resources', 3),
+    -> (4, 'Finance', 4),
+    -> (5, 'IT', 5),
+    -> (6, 'Customer Support', 6),
+    -> (7, 'Logistics', 7),
+    -> (8, 'Research and Development', 8);
+Query OK, 8 rows affected (0.13 sec)
+Records: 8  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id)
+    -> VALUES
+    -> (1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '2025-03-01', 101, 50000, NULL, 1),
+    -> (2, 'Jane', 'Smith', 'jane.smith@example.com', '987-654-3210', '2024-06-15', 102, 55000, 1, 2),
+    -> (3, 'Michael', 'Johnson', 'michael.johnson@example.com', '555-111-2222', '2023-11-22', 103, 60000, 2, 3),
+    -> (4, 'Emily', 'Davis', 'emily.davis@example.com', '555-333-4444', '2022-05-09', 104, 45000, 1, 4),
+    -> (5, 'William', 'Brown', 'william.brown@example.com', '555-555-5555', '2021-12-01', 105, 70000, NULL, 5),
+    -> (6, 'Olivia', 'Taylor', 'olivia.taylor@example.com', '555-666-7777', '2020-09-18', 106, 65000, 5, 6);
+ERROR 1265 (01000): Data truncated for column 'phone_number' at row 1
+mysql> select *from employees;
+Empty set (0.00 sec)
+
+mysql> INSERT INTO employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id)
+    -> VALUES
+    -> (1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '2025-03-01', 101, 50000, NULL, 1),
+    -> (2, 'Jane', 'Smith', 'jane.smith@example.com', '987-654-3210', '2024-06-15', 102, 55000, 1, 2),
+    -> (3, 'Michael', 'Johnson', 'michael.johnson@example.com', '555-111-2222', '2023-11-22', 103, 60000, 2, 3),
+    -> (4, 'Emily', 'Davis', 'emily.davis@example.com', '555-333-4444', '2022-05-09', 104, 45000, 1, 4),
+    -> (5, 'William', 'Brown', 'william.brown@example.com', '555-555-5555', '2021-12-01', 105, 70000, NULL, 5),
+    -> (6, 'Olivia', 'Taylor', 'olivia.taylor@example.com', '555-666-7777', '2020-09-18', 106, 65000, 5, 6);
+ERROR 1265 (01000): Data truncated for column 'phone_number' at row 1
+mysql> select *from countries;
++------------+---------------+-----------+
+| country_id | country_name  | region_id |
++------------+---------------+-----------+
+|          1 | United States |         1 |
+|          2 | Canada        |         1 |
+|          3 | Germany       |         2 |
+|          4 | France        |         2 |
+|          5 | China         |         3 |
+|          6 | Japan         |         3 |
+|          7 | Nigeria       |         4 |
+|          8 | South Africa  |         4 |
+|          9 | Australia     |         5 |
++------------+---------------+-----------+
+9 rows in set (0.00 sec)
+
+mysql> INSERT INTO employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id) VALUES (1, 'John', 'Doe', 'john.doe@example.com', '1234567890', '2025-03-01', 101, 50000, NULL, 1), (2, 'Jane', 'Smith', 'jane.smith@example.com', '9876543210', '2024-06-15', 102, 55000, 1, 2), (3, 'Michael', 'Johnson', 'michael.johnson@example.com', '5551112222',
+'2023-11-22', 103, 60000, 2, 3), (4, 'Emily', 'Davis', 'emily.davis@example.com', '5553334444', '2022-05-09', 104, 45000, 1, 4), (5, 'William', 'Brown', 'william.brown@example.com', '5555555555', '2021-12-01', 105, 70000, NULL, 5), (6, 'Olivia', 'Taylor', 'olivia.taylor@example.com', '5556667777', '2020-09-18', 106, 65000, 5, 6);
+ERROR 1264 (22003): Out of range value for column 'phone_number' at row 2
+mysql> SELECT department_id FROM departments;
++---------------+
+| department_id |
++---------------+
+|             1 |
+|             2 |
+|             3 |
+|             4 |
+|             5 |
+|             6 |
+|             7 |
+|             8 |
++---------------+
+8 rows in set (0.00 sec)
+
+mysql> INSERT INTO employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id)
+    -> VALUES
+    -> (1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '2025-03-01', 101, 50000, NULL, 1),
+    -> (5, 'William', 'Brown', 'william.brown@example.com', '555-555-5555', '2021-12-01', 105, 70000, NULL, 5);
+ERROR 1265 (01000): Data truncated for column 'phone_number' at row 1
+mysql> INSERT INTO employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id)
+    -> VALUES
+    -> (1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '2025-03-01', 101, 50000, NULL, 1),
+    -> (5, 'William', 'Brown', 'william.brown@example.com', '555-555-5555', '2021-12-01', 105, 70000, NULL, 5);
+ERROR 1265 (01000): Data truncated for column 'phone_number' at row 1
+mysql> ALTER TABLE employees MODIFY COLUMN phone_number VARCHAR(15);
+Query OK, 0 rows affected (2.33 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id)
+    -> VALUES
+    -> (1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '2025-03-01', 101, 50000, NULL, 1),
+    -> (5, 'William', 'Brown', 'william.brown@example.com', '555-555-5555', '2021-12-01', 105, 70000, NULL, 5);
+Query OK, 2 rows affected (0.10 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECt *from employees;
++-------------+------------+-----------+---------------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                     | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+---------------------------+--------------+------------+--------+--------+------------+---------------+
+|           1 | John       | Doe       | john.doe@example.com      | 123-456-7890 | 2025-03-01 |    101 |  50000 |       NULL |             1 |
+|           5 | William    | Brown     | william.brown@example.com | 555-555-5555 | 2021-12-01 |    105 |  70000 |       NULL |             5 |
++-------------+------------+-----------+---------------------------+--------------+------------+--------+--------+------------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> NSERT INTO employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id) VALUES (1, 'John', 'Doe', 'john.doe@example.com', '1234567890', '2025-03-01', 101, 50000, NULL, 1), (2, 'Jane', 'Smith', 'jane.smith@example.com', '9876543210', '2024-06-15', 102, 55000, 1, 2), (3, 'Michael', 'Johnson', 'michael.johnson@example.com', '5551112222',
+    -> '2023-11-22', 103, 60000, 2, 3), (4, 'Emily', 'Davis', 'emily.davis@example.com', '5553334444', '2022-05-09', 104, 45000, 1, 4), (5, 'William', 'Brown', 'william.brown@example.com', '5555555555', '2021-12-01', 105, 70000, NULL, 5), (6, 'Olivia', 'Taylor', 'olivia.taylor@example.com', '5556667777', '2020-09-18', 106, 65000, 5, 6);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NSERT INTO employees (employee_id, first_name, last_name, email, phone_number, h' at line 1
+mysql> INSERT INTO employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id)
+    -> VALUES
+    -> (1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '2025-03-01', 101, 50000, NULL, 1),
+    -> (2, 'Jane', 'Smith', 'jane.smith@example.com', '987-654-3210', '2024-06-15', 102, 55000, 1, 2),
+    -> (3, 'Michael', 'Johnson', 'michael.johnson@example.com', '555-111-2222', '2023-11-22', 103, 60000, 2, 3),
+    -> (4, 'Emily', 'Davis', 'emily.davis@example.com', '555-333-4444', '2022-05-09', 104, 45000, 1, 4),
+    -> (5, 'William', 'Brown', 'william.brown@example.com', '555-555-5555', '2021-12-01', 105, 70000, NULL, 5);
+ERROR 1062 (23000): Duplicate entry '1' for key 'employees.PRIMARY'
+mysql> INSERT INTO employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id)
+    ->     -> VALUES
+    ->     -> (1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '2025-03-01', 101, 50000, NULL, 1),
+    ->     -> (2, 'Jane', 'Smith', 'jane.smith@example.com', '987-654-3210', '2024-06-15', 102, 55000, 1, 2),
+    ->     -> (3, 'Michael', 'Johnson', 'michael.johnson@example.com', '555-111-2222', '2023-11-22', 103, 60000, 2, 3),
+    ->     -> (3, 'Michael', 'Johnson', 'michael.johnson@example.com', '555-111-2222', '2023-11-22', 103, 60000, 2, 3)
+    -> 
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> VALUES
+    -> (1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '202' at line 2
+mysql> DELETE FROM employees
+    -> WHERE employee_id IN (1, 5);
+Query OK, 2 rows affected (0.14 sec)
+
+mysql> INSERT INTO employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id)
+    ->     -> VALUES
+    ->     -> (1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '2025-03-01', 101, 50000, NULL, 1),
+    ->     -> (2, 'Jane', 'Smith', 'jane.smith@example.com', '987-654-3210', '2024-06-15', 102, 55000, 1, 2),
+    ->     -> (3, 'Michael', 'Johnson', 'michael.johnson@example.com', '555-111-2222', '2023-11-22', 103, 60000, 2, 3),
+    ->     -> (4, 'Emily', 'Davis', 'emily.davis@example.com', '555-333-4444', '2022-05-09', 104, 45000, 1, 4),
+    ->     -> (5, 'William', 'Brown', 'william.brown@example.com', '555-555-5555', '2021-12-01', 105, 70000, NULL, 5);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> VALUES
+    -> (1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '202' at line 2
+mysql> INSERT INTO employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id)
+    ->     -> VALUES
+    ->     -> (1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '2025-03-01', 101, 50000, NULL, 1),
+    ->     -> (2, 'Jane', 'Smith', 'jane.smith@example.com', '987-654-3210', '2024-06-15', 102, 55000, 1, 2),
+    ->     -> (3, 'Michael', 'Johnson', 'michael.johnson@example.com', '555-111-2222', '2023-11-22', 103, 60000, 2, 3),
+    ->     -> (4, 'Emily', 'Davis', 'emily.davis@example.com', '555-333-4444', '2022-05-09', 104, 45000, 1, 4),
+    ->     -> (5, 'William', 'Brown', 'william.brown@example.com', '555-555-5555', '2021-12-01', 105, 70000, NULL, 5);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> VALUES
+    -> (1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '202' at line 2
+mysql> select *from employees;
+Empty set (0.00 sec)
+
+mysql> desc employees;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| employee_id   | int         | NO   | PRI | NULL    |       |
+| first_name    | varchar(10) | YES  |     | NULL    |       |
+| last_name     | varchar(10) | YES  |     | NULL    |       |
+| email         | varchar(50) | YES  |     | NULL    |       |
+| phone_number  | varchar(15) | YES  |     | NULL    |       |
+| hire_date     | date        | YES  |     | NULL    |       |
+| job_id        | int         | YES  |     | NULL    |       |
+| salary        | int         | YES  |     | NULL    |       |
+| manager_id    | int         | YES  |     | NULL    |       |
+| department_id | int         | YES  | MUL | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+10 rows in set (0.00 sec)
+
+mysql> INSERT INTO employees (employee_id, first_name, last_name, email, phone_number, hire_date, job_id, salary, manager_id, department_id)
+    -> VALUES
+    -> (1, 'John', 'Doe', 'john.doe@example.com', '123-456-7890', '2025-03-01', 101, 50000, NULL, 1),
+    -> (2, 'Jane', 'Smith', 'jane.smith@example.com', '987-654-3210', '2024-06-15', 102, 55000, 1, 2),
+    -> (3, 'Michael', 'Johnson', 'michael.johnson@example.com', '555-111-2222', '2023-11-22', 103, 60000, 2, 3),
+    -> (4, 'Emily', 'Davis', 'emily.davis@example.com', '555-333-4444', '2022-05-09', 104, 45000, 1, 4),
+    -> (5, 'Olivia', 'Taylor', 'olivia.taylor@example.com', '555-666-7777', '2020-09-18', 105, 70000, NULL, 5);
+Query OK, 5 rows affected (0.13 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select *from employees;
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                       | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+|           1 | John       | Doe       | john.doe@example.com        | 123-456-7890 | 2025-03-01 |    101 |  50000 |       NULL |             1 |
+|           2 | Jane       | Smith     | jane.smith@example.com      | 987-654-3210 | 2024-06-15 |    102 |  55000 |          1 |             2 |
+|           3 | Michael    | Johnson   | michael.johnson@example.com | 555-111-2222 | 2023-11-22 |    103 |  60000 |          2 |             3 |
+|           4 | Emily      | Davis     | emily.davis@example.com     | 555-333-4444 | 2022-05-09 |    104 |  45000 |          1 |             4 |
+|           5 | Olivia     | Taylor    | olivia.taylor@example.com   | 555-666-7777 | 2020-09-18 |    105 |  70000 |       NULL |             5 |
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> INSERT INTO dependents (dependent_id, first_name, last_name, relationship, employee_id)
+    -> VALUES
+    -> (1, 'Alice', 'Doe', 'Spouse', 1),
+    -> (2, 'Jack', 'Doe', 'Child', 1),
+    -> (3, 'Michael', 'Smith', 'Spouse', 2),
+    -> (4, 'Lily', 'Johnson', 'Child', 3),
+    -> (5, 'Oliver', 'Davis', 'Spouse', 4);
+Query OK, 5 rows affected (0.21 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select *from departments;
++---------------+--------------------------+-------------+
+| department_id | department_name          | location_id |
++---------------+--------------------------+-------------+
+|             1 | Sales                    |           1 |
+|             2 | Marketing                |           2 |
+|             3 | Human Resources          |           3 |
+|             4 | Finance                  |           4 |
+|             5 | IT                       |           5 |
+|             6 | Customer Support         |           6 |
+|             7 | Logistics                |           7 |
+|             8 | Research and Development |           8 |
++---------------+--------------------------+-------------+
+8 rows in set (0.00 sec)
+
+mysql> select *from employees;
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                       | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+|           1 | John       | Doe       | john.doe@example.com        | 123-456-7890 | 2025-03-01 |    101 |  50000 |       NULL |             1 |
+|           2 | Jane       | Smith     | jane.smith@example.com      | 987-654-3210 | 2024-06-15 |    102 |  55000 |          1 |             2 |
+|           3 | Michael    | Johnson   | michael.johnson@example.com | 555-111-2222 | 2023-11-22 |    103 |  60000 |          2 |             3 |
+|           4 | Emily      | Davis     | emily.davis@example.com     | 555-333-4444 | 2022-05-09 |    104 |  45000 |          1 |             4 |
+|           5 | Olivia     | Taylor    | olivia.taylor@example.com   | 555-666-7777 | 2020-09-18 |    105 |  70000 |       NULL |             5 |
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> select *from locations;
++-------------+----------------+-------------+---------------+----------------------+------------+
+| location_id | street_address | postal_code | city          | state_province       | country_id |
++-------------+----------------+-------------+---------------+----------------------+------------+
+|           1 | 123 Elm St     | 90210       | Beverly Hills | California           |          1 |
+|           2 | 456 Maple Ave  | 10001       | New York      | New York             |          1 |
+|           3 | 789 Oak Rd     | 20001       | Washington    | District of Columbia |          2 |
+|           4 | 101 Pine Blvd  | 75001       | Dallas        | Texas                |          1 |
+|           5 | 202 Birch Ln   | 75001       | Frisco        | Texas                |          3 |
+|           6 | 303 Cedar Dr   | 50001       | Tokyo         | Tokyo                |          6 |
+|           7 | 404 Walnut Way | 60001       | Berlin        | Berlin               |          3 |
+|           8 | 505 Maple St   | 70001       | Paris         | Ile-de-France        |          2 |
++-------------+----------------+-------------+---------------+----------------------+------------+
+8 rows in set (0.01 sec)
+
+mysql> select *from dependents;
++--------------+------------+-----------+--------------+-------------+
+| dependent_id | first_name | last_name | relationship | employee_id |
++--------------+------------+-----------+--------------+-------------+
+|            1 | Alice      | Doe       | Spouse       |           1 |
+|            2 | Jack       | Doe       | Child        |           1 |
+|            3 | Michael    | Smith     | Spouse       |           2 |
+|            4 | Lily       | Johnson   | Child        |           3 |
+|            5 | Oliver     | Davis     | Spouse       |           4 |
++--------------+------------+-----------+--------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select e.*
+    -> employees e
+    -> join departments d on e.department_id=d.department_id
+    -> where d.location_id=1700;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'employees e
+join departments d on e.department_id=d.department_id
+where d.locati' at line 2
+mysql> select e.* employees e join departments d on e.department_id=d.department_id where d.location_id=4;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'employees e join departments d on e.department_id=d.department_id where d.locati' at line 1
+mysql> select e.* 
+    -> employees e
+    ->     -> join departments d on e.department_id=d.department_id
+    ->     -> where d.location_id=3;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'employees e
+    -> join departments d on e.department_id=d.department_id
+    -> ' at line 2
+mysql> select e.*  employees e     -> join departments d on e.department_id=d.department_id     -> where d.location_id=3;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'employees e     -> join departments d on e.department_id=d.department_id     -> ' at line 1
+mysql> select e.*  employees e     -> join departments d on e.department_id=d.department_id     -> where d.location_id=3;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'employees e     -> join departments d on e.department_id=d.department_id     -> ' at line 1
+mysql> select e.* employees e join departments d on e.department_id=d.department_id join locations l on d.location_id=l.location_id where l.location_id=3;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'employees e join departments d on e.department_id=d.department_id join locations' at line 1
+mysql> select e.* employees e join departments d on e.department_id=d.department_id join locations l on d.location_id=l.location_id where l.location_id=3;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'employees e join departments d on e.department_id=d.department_id join locations' at line 1
+mysql> desc departments;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| department_id   | int         | NO   | PRI | NULL    |       |
+| department_name | varchar(30) | YES  |     | NULL    |       |
+| location_id     | int         | YES  | MUL | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select *fron departments;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'fron departments' at line 1
+mysql> select *from departments;
++---------------+--------------------------+-------------+
+| department_id | department_name          | location_id |
++---------------+--------------------------+-------------+
+|             1 | Sales                    |           1 |
+|             2 | Marketing                |           2 |
+|             3 | Human Resources          |           3 |
+|             4 | Finance                  |           4 |
+|             5 | IT                       |           5 |
+|             6 | Customer Support         |           6 |
+|             7 | Logistics                |           7 |
+|             8 | Research and Development |           8 |
++---------------+--------------------------+-------------+
+8 rows in set (0.00 sec)
+
+mysql> select *from locations;
++-------------+----------------+-------------+---------------+----------------------+------------+
+| location_id | street_address | postal_code | city          | state_province       | country_id |
++-------------+----------------+-------------+---------------+----------------------+------------+
+|           1 | 123 Elm St     | 90210       | Beverly Hills | California           |          1 |
+|           2 | 456 Maple Ave  | 10001       | New York      | New York             |          1 |
+|           3 | 789 Oak Rd     | 20001       | Washington    | District of Columbia |          2 |
+|           4 | 101 Pine Blvd  | 75001       | Dallas        | Texas                |          1 |
+|           5 | 202 Birch Ln   | 75001       | Frisco        | Texas                |          3 |
+|           6 | 303 Cedar Dr   | 50001       | Tokyo         | Tokyo                |          6 |
+|           7 | 404 Walnut Way | 60001       | Berlin        | Berlin               |          3 |
+|           8 | 505 Maple St   | 70001       | Paris         | Ile-de-France        |          2 |
++-------------+----------------+-------------+---------------+----------------------+------------+
+8 rows in set (0.00 sec)
+
+mysql> select e.* employees e join departments d on e.department_id=d.department_id join locations l on d.location_id=l.location_id where l.location_id=8;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'employees e join departments d on e.department_id=d.department_id join locations' at line 1
+mysql> SELECT e.* 
+    -> FROM employees e 
+    -> JOIN departments d ON e.department_id = d.department_id 
+    -> JOIN locations l ON d.location_id = l.location_id 
+    -> WHERE l.location_id = 8;
+Empty set (0.00 sec)
+
+mysql> SELECT e.*  FROM employees e  JOIN departments d ON e.department_id = d.department_id  JOIN locations l ON d.location_id = l.location_id  WHERE l.location_id = 4;
++-------------+------------+-----------+-------------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                   | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+-------------------------+--------------+------------+--------+--------+------------+---------------+
+|           4 | Emily      | Davis     | emily.davis@example.com | 555-333-4444 | 2022-05-09 |    104 |  45000 |          1 |             4 |
++-------------+------------+-----------+-------------------------+--------------+------------+--------+--------+------------+---------------+
+1 row in set (0.00 sec)
+
+mysql> select *from employees;
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                       | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+|           1 | John       | Doe       | john.doe@example.com        | 123-456-7890 | 2025-03-01 |    101 |  50000 |       NULL |             1 |
+|           2 | Jane       | Smith     | jane.smith@example.com      | 987-654-3210 | 2024-06-15 |    102 |  55000 |          1 |             2 |
+|           3 | Michael    | Johnson   | michael.johnson@example.com | 555-111-2222 | 2023-11-22 |    103 |  60000 |          2 |             3 |
+|           4 | Emily      | Davis     | emily.davis@example.com     | 555-333-4444 | 2022-05-09 |    104 |  45000 |          1 |             4 |
+|           5 | Olivia     | Taylor    | olivia.taylor@example.com   | 555-666-7777 | 2020-09-18 |    105 |  70000 |       NULL |             5 |
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT e.*  FROM employees e  JOIN departments d ON e.department_id = d.department_id  JOIN locations l ON d.location_id = l.location_id  WHERE l.location_id != 4;
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                       | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+|           1 | John       | Doe       | john.doe@example.com        | 123-456-7890 | 2025-03-01 |    101 |  50000 |       NULL |             1 |
+|           2 | Jane       | Smith     | jane.smith@example.com      | 987-654-3210 | 2024-06-15 |    102 |  55000 |          1 |             2 |
+|           3 | Michael    | Johnson   | michael.johnson@example.com | 555-111-2222 | 2023-11-22 |    103 |  60000 |          2 |             3 |
+|           5 | Olivia     | Taylor    | olivia.taylor@example.com   | 555-666-7777 | 2020-09-18 |    105 |  70000 |       NULL |             5 |
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+4 rows in set (0.01 sec)
+
+mysql> 
