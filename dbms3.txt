@@ -165,4 +165,28 @@ mysql> select avg(avg_salary) as overall_avg from (select avg(salary) as avg_sal
 
 mysql> 
 
+mysql> select salary,(select avg(salary) from employees) as avg_salary,salary - (select avg(salary) from employees) as difference from employees;
++--------+------------+-------------+
+| salary | avg_salary | difference  |
++--------+------------+-------------+
+|  50000 | 56000.0000 |  -6000.0000 |
+|  55000 | 56000.0000 |  -1000.0000 |
+|  60000 | 56000.0000 |   4000.0000 |
+|  45000 | 56000.0000 | -11000.0000 |
+|  70000 | 56000.0000 |  14000.0000 |
++--------+------------+-------------+
+5 rows in set (0.04 sec)
+
+mysql> select e.* from employees e where salary > (select avg(salary)from employees where department_id = e.department_id);
+Empty set (0.00 sec)
+
+mysql> select e.* from employees e left join dependents d on e.employee_id=d.employee_id where d.dependent_id is null;
++-------------+------------+-----------+---------------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                     | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+---------------------------+--------------+------------+--------+--------+------------+---------------+
+|           5 | Olivia     | Taylor    | olivia.taylor@example.com | 555-666-7777 | 2020-09-18 |    105 |  70000 |       NULL |             5 |
++-------------+------------+-----------+---------------------------+--------------+------------+--------+--------+------------+---------------+
+1 row in set (0.02 sec)
+
+mysql> 
 
