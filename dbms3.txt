@@ -1,0 +1,168 @@
+s2mcabatch2@cscl6d05:~/Desktop$ mysql -u s2mcabatch2 -p;
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.36-0ubuntu0.20.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| abin               |
+| ajay               |
+| anand              |
+| company            |
+| coustomer          |
+| information_schema |
+| lab                |
+| mca                |
+| mysql              |
+| org                |
+| performance_schema |
+| sys                |
+| vishnu             |
++--------------------+
+13 rows in set (0.04 sec)
+
+mysql> use company;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> shows tables;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'shows tables' at line 1
+mysql> show tables;
++-------------------+
+| Tables_in_company |
++-------------------+
+| countries         |
+| departments       |
+| dependents        |
+| employees         |
+| jobs              |
+| locations         |
+| regions           |
++-------------------+
+7 rows in set (0.00 sec)
+
+mysql> select *from region;
+ERROR 1146 (42S02): Table 'company.region' doesn't exist
+mysql> select *from regions;
++-----------+---------------+
+| region_id | region_name   |
++-----------+---------------+
+|         1 | North America |
+|         2 | Europe        |
+|         3 | Asia          |
+|         4 | Africa        |
+|         5 | Australia     |
++-----------+---------------+
+5 rows in set (0.01 sec)
+
+mysql> select * from employees where salary=(select max(salary) from employees); 
++-------------+------------+-----------+---------------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                     | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+---------------------------+--------------+------------+--------+--------+------------+---------------+
+|           5 | Olivia     | Taylor    | olivia.taylor@example.com | 555-666-7777 | 2020-09-18 |    105 |  70000 |       NULL |             5 |
++-------------+------------+-----------+---------------------------+--------------+------------+--------+--------+------------+---------------+
+1 row in set (0.03 sec)
+
+mysql> select *from emplyees;
+ERROR 1146 (42S02): Table 'company.emplyees' doesn't exist
+mysql> select *from employees;
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                       | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+|           1 | John       | Doe       | john.doe@example.com        | 123-456-7890 | 2025-03-01 |    101 |  50000 |       NULL |             1 |
+|           2 | Jane       | Smith     | jane.smith@example.com      | 987-654-3210 | 2024-06-15 |    102 |  55000 |          1 |             2 |
+|           3 | Michael    | Johnson   | michael.johnson@example.com | 555-111-2222 | 2023-11-22 |    103 |  60000 |          2 |             3 |
+|           4 | Emily      | Davis     | emily.davis@example.com     | 555-333-4444 | 2022-05-09 |    104 |  45000 |          1 |             4 |
+|           5 | Olivia     | Taylor    | olivia.taylor@example.com   | 555-666-7777 | 2020-09-18 |    105 |  70000 |       NULL |             5 |
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+5 rows in set (0.01 sec)
+
+mysql> select * from employees where salary=(select avg(salary) from employees)
+;
+Empty set (0.00 sec)
+
+mysql> select * from emplyees where salary > (select avg(salary) from employees);
+ERROR 1146 (42S02): Table 'company.emplyees' doesn't exist
+mysql> select * from employees where salary > (select avg(salary) from employees);
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                       | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+|           3 | Michael    | Johnson   | michael.johnson@example.com | 555-111-2222 | 2023-11-22 |    103 |  60000 |          2 |             3 |
+|           5 | Olivia     | Taylor    | olivia.taylor@example.com   | 555-666-7777 | 2020-09-18 |    105 |  70000 |       NULL |             5 |
++-------------+------------+-----------+-----------------------------+--------------+------------+--------+--------+------------+---------------+
+2 rows in set (0.00 sec)
+
+mysql> select d.department_id, d.department_name from departments d where exits ()^[[D^[[D^[[D^[[D^[[;                                        
+d where exits ()
+^C
+mysql> select d.department_id, d.department_name from departments d where exits > (select max(salary>1000) from employees);
+ERROR 1054 (42S22): Unknown column 'exits' in 'where clause'
+mysql> select d.department_id, d.department_name from departments d where exits (select 1 from employees e where e.department_id=d.department_id and e.salary>10000);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select 1 from employees e where e.department_id=d.department_id and e.salary>100' at line 1
+mysql> select d.department_id, d.department_name from departments d where exits (select * from employees e where e.department_id=d.department_id and e.salary>10000);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select * from employees e where e.department_id=d.department_id and e.salary>100' at line 1
+mysql> select d.department_id, d.department_name from departments d where exists (select * from employees e where e.department_id=d.department_id and e.salary>10000);
++---------------+-----------------+
+| department_id | department_name |
++---------------+-----------------+
+|             1 | Sales           |
+|             2 | Marketing       |
+|             3 | Human Resources |
+|             4 | Finance         |
+|             5 | IT              |
++---------------+-----------------+
+5 rows in set (0.03 sec)
+
+mysql> select *from employees where salary > all(select min(salary) from employees groupby department_id);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'department_id)' at line 1
+mysql> select *from employees where salary > all(select min(salary) from employees group by department_id);
+Empty set (0.00 sec)
+
+mysql> select *from employees e where salary > all (select min(salary) from employees group by department_id);
+Empty set (0.00 sec)
+
+mysql> select *from employees e where salary > all (select max(salary) from employees group by department_id);
+Empty set (0.00 sec)
+
+mysql> select avg(dept_salary)as overall_avg_salary from (select department_id,avg(salary)as dept_salary from employees group by department_id)as totalsalary;
++--------------------+
+| overall_avg_salary |
++--------------------+
+|     56000.00000000 |
++--------------------+
+1 row in set (0.00 sec)
+
+mysql> 
+mysql> select *from employees e where salary >= all (select max(salary) from employees group by department_id);
++-------------+------------+-----------+---------------------------+--------------+------------+--------+--------+------------+---------------+
+| employee_id | first_name | last_name | email                     | phone_number | hire_date  | job_id | salary | manager_id | department_id |
++-------------+------------+-----------+---------------------------+--------------+------------+--------+--------+------------+---------------+
+|           5 | Olivia     | Taylor    | olivia.taylor@example.com | 555-666-7777 | 2020-09-18 |    105 |  70000 |       NULL |             5 |
++-------------+------------+-----------+---------------------------+--------------+------------+--------+--------+------------+---------------+
+1 row in set (0.00 sec)
+
+mysql> select avg(avg_salary) as overall_avg from (select avg(salary) as avg_salary from employeesgroup by department_id) dept_avg;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'by department_id) dept_avg' at line 1
+mysql> select avg(avg_salary) as overall_avg from (select avg(salary) as avg_salary from employees group by department_id) dept_avg;
++----------------+
+| overall_avg    |
++----------------+
+| 56000.00000000 |
++----------------+
+1 row in set (0.00 sec)
+
+mysql> 
+
+
