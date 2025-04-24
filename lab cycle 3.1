@@ -1,0 +1,211 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| College            |
+| Company            |
+| Company2           |
+| Loan               |
+| OrderDB            |
+| Organization       |
+| emp                |
+| emplo              |
+| information_schema |
+| mysql              |
+| performance_schema |
+| shop               |
+| sys                |
++--------------------+
+13 rows in set (0.08 sec)
+
+mysql> create database transaction;
+Query OK, 1 row affected (0.30 sec)
+
+mysql> use transaction;
+Database changed
+mysql> create table procedure;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'procedure' at line 1
+mysql> create table customer(id int primary key,name varchar(10),city varchar(10),credits int);
+Query OK, 0 rows affected (0.94 sec)
+
+mysql> INSERT INTO customer (id, name, city, credits) VALUES
+    -> (1, 'Alice', 'Boston', 500),
+    -> (2, 'Bob', 'Chicago', 300),
+    -> (3, 'Carol', 'Dallas', 450),
+    -> (4, 'Dave', 'Austin', 600);
+Query OK, 4 rows affected (1.02 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from procedures;
+ERROR 1146 (42S02): Table 'transaction.procedures' doesn't exist
+mysql> select * from procedure;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'procedure' at line 1
+mysql> select *from procedure;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'procedure' at line 1
+mysql> select *from customer;
++----+-------+---------+---------+
+| id | name  | city    | credits |
++----+-------+---------+---------+
+|  1 | Alice | Boston  |     500 |
+|  2 | Bob   | Chicago |     300 |
+|  3 | Carol | Dallas  |     450 |
+|  4 | Dave  | Austin  |     600 |
++----+-------+---------+---------+
+4 rows in set (0.01 sec)
+
+mysql> set autcommit=0;
+ERROR 1193 (HY000): Unknown system variable 'autcommit'
+mysql> set autocommit=0;
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> start transaction;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> INSERT INTO customer (id, name, city, credits) VALUES
+    -> (1, 'Alice', 'Boston', 500),
+    -> (2, 'Bob', 'Chicago', 300),
+    -> (3, 'Carol', 'Dallas', 450),
+    -> (4, 'Dave', 'Austin', 600);
+INSERT INTO customer (id, name, city, credits) VALUES
+^C
+mysql>     -> (1, 'Alice', 'Boston', 500),
+    ->     -> (2, 'Bob', 'Chicago', 300),
+    ->     -> (3, 'Carol', 'Dallas', 450),
+    ->     -> (4, 'Dave', 'Austin', 600);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> (1, 'Alice', 'Boston', 500),
+    -> (2, 'Bob', 'Chicago', 300),
+    -> (3, 'C' at line 1
+mysql> INSERT INTO customer (id, name, city, credits) VALUES
+    ->     -> (1, 'Alice', 'Boston', 500),
+    ->     -> (2, 'Bob', 'Chicago', 300),
+    ->     -> (3, 'Carol', 'Dallas', 450),
+    ->     -> (4, 'Dave', 'Austin', 600);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '-> (1, 'Alice', 'Boston', 500),
+    -> (2, 'Bob', 'Chicago', 300),
+    -> (3, 'C' at line 2
+mysql> INSERT INTO customer (id, name, city, credits) VALUES
+    -> (5,'sasi','kochi',700)
+    -> (6,'varkala','dubai',800)
+    -> (7,'ramu','attingal',300);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(6,'varkala','dubai',800)
+(7,'ramu','attingal',300)' at line 3
+mysql> INSERT INTO customer (id, name, city, credits) VALUES (5,'sasi','kochi',700) (6,'mohanlal','dubai',800) (7,'ramu','attingal',300);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(6,'mohanlal','dubai',800) (7,'ramu','attingal',300)' at line 1
+mysql> INSERT INTO customer (id, name, city, credits) VALUES (5,'sasi','kochi',700);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO customer (id, name, city, credits) VALUES (6,'mohanlal','attingal',800);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO customer (id, name, city, credits) VALUES (7,'vikram','dubai',900);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from customer;
++----+----------+----------+---------+
+| id | name     | city     | credits |
++----+----------+----------+---------+
+|  1 | Alice    | Boston   |     500 |
+|  2 | Bob      | Chicago  |     300 |
+|  3 | Carol    | Dallas   |     450 |
+|  4 | Dave     | Austin   |     600 |
+|  5 | sasi     | kochi    |     700 |
+|  6 | mohanlal | attingal |     800 |
+|  7 | vikram   | dubai    |     900 |
++----+----------+----------+---------+
+7 rows in set (0.00 sec)
+
+mysql> rollback;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> select *from customer;
++----+-------+---------+---------+
+| id | name  | city    | credits |
++----+-------+---------+---------+
+|  1 | Alice | Boston  |     500 |
+|  2 | Bob   | Chicago |     300 |
+|  3 | Carol | Dallas  |     450 |
+|  4 | Dave  | Austin  |     600 |
++----+-------+---------+---------+
+4 rows in set (0.00 sec)
+
+mysql> INSERT INTO customer (id, name, city, credits) VALUES (5,'sasi','kochi',700);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO customer (id, name, city, credits) VALUES (6,'mohanlal','attingal',800);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO customer (id, name, city, credits) VALUES (7,'vikram','dubai',900);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> savepoint checkp;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select *from customer;
++----+----------+----------+---------+
+| id | name     | city     | credits |
++----+----------+----------+---------+
+|  1 | Alice    | Boston   |     500 |
+|  2 | Bob      | Chicago  |     300 |
+|  3 | Carol    | Dallas   |     450 |
+|  4 | Dave     | Austin   |     600 |
+|  5 | sasi     | kochi    |     700 |
+|  6 | mohanlal | attingal |     800 |
+|  7 | vikram   | dubai    |     900 |
++----+----------+----------+---------+
+7 rows in set (0.00 sec)
+
+mysql> INSERT INTO customer (id, name, city, credits) VALUES
+    -> (5, 'Eve', 'New York', 700),
+    -> (6, 'Frank', 'Los Angeles', 250),
+    -> INSERT INTO customer (id, name, city, credits) VALUES (5,'sasi','kochi',700);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INSERT INTO customer (id, name, city, credits) VALUES (5,'sasi','kochi',700)' at line 4
+mysql> NSERT INTO customer (id, name, city, credits) VALUES (8, 'Eve', 'New York', 700);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NSERT INTO customer (id, name, city, credits) VALUES (8, 'Eve', 'New York', 700)' at line 1
+mysql> INSERT INTO customer (id, name, city, credits) VALUES (8, 'Eve', 'New York', 700);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO customer (id, name, city, credits) VALUES (9, 'Frank', 'Los Angeles', 250);
+ERROR 1406 (22001): Data too long for column 'city' at row 1
+mysql> INSERT INTO customer (id, name, city, credits) VALUES (9, 'Frank', 'Los Angeles', 250);
+ERROR 1406 (22001): Data too long for column 'city' at row 1
+mysql> INSERT INTO customer (id, name, city, credits) VALUES (9, 'kp', 'kottayam', 770);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> INSERT INTO customer (id, name, city, credits) VALUES (10, 'jayram', 'tvm', 370);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from customer;
++----+----------+----------+---------+
+| id | name     | city     | credits |
++----+----------+----------+---------+
+|  1 | Alice    | Boston   |     500 |
+|  2 | Bob      | Chicago  |     300 |
+|  3 | Carol    | Dallas   |     450 |
+|  4 | Dave     | Austin   |     600 |
+|  5 | sasi     | kochi    |     700 |
+|  6 | mohanlal | attingal |     800 |
+|  7 | vikram   | dubai    |     900 |
+|  8 | Eve      | New York |     700 |
+|  9 | kp       | kottayam |     770 |
+| 10 | jayram   | tvm      |     370 |
++----+----------+----------+---------+
+10 rows in set (0.00 sec)
+
+mysql> rollback to savepoint checkp;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select *from customer;
++----+----------+----------+---------+
+| id | name     | city     | credits |
++----+----------+----------+---------+
+|  1 | Alice    | Boston   |     500 |
+|  2 | Bob      | Chicago  |     300 |
+|  3 | Carol    | Dallas   |     450 |
+|  4 | Dave     | Austin   |     600 |
+|  5 | sasi     | kochi    |     700 |
+|  6 | mohanlal | attingal |     800 |
+|  7 | vikram   | dubai    |     900 |
++----+----------+----------+---------+
+7 rows in set (0.00 sec)
+
+mysql> 
