@@ -1,0 +1,225 @@
+mongo
+MongoDB shell version v4.4.24
+connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("695a82cd-1301-4870-8b8a-5bda002c20fe") }
+MongoDB server version: 4.4.24
+---
+The server generated these startup warnings when booting: 
+        2025-05-22T13:32:44.686+05:30: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+        2025-05-22T13:32:50.312+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+---
+> show dbs
+Inventoryy  0.000GB
+admin       0.000GB
+config      0.000GB
+inventory   0.000GB
+local       0.000GB
+sales       0.000GB
+user        0.000GB
+> use agg
+switched to db agg
+> db.sales.insertMany([
+... { "_id" : 1, "item" : "Americanos", "price" : 5, "size": "Short","quantity" : 22, "date" :
+... ISODate("2022-01-15T08:00:00Z") },
+... { "_id" : 2, "item" : "Cappuccino", "price" : 6, "size": "Short","quantity": 12, "date" :
+... ISODate("2022-01-16T09:00:00Z") },
+... { "_id" : 3, "item" : "Lattes", "price" : 15, "size": "Grande","quantity" :25, "date" :
+... ISODate("2022-01-16T09:05:00Z") },
+... { "_id" : 4, "item" : "Mochas", "price" : 25,"size": "Tall", "quantity" :11, "date" :
+... ISODate("2022-02-17T08:00:00Z") },
+... { "_id" : 5, "item" : "Americanos", "price" : 10, "size":"Grande","quantity" : 12, "date" :
+... ISODate("2022-02-18T21:06:00Z") },
+... { "_id" : 6, "item" : "Cappuccino", "price" : 7, "size":"Tall","quantity" : 20, "date" :
+... ISODate("2022-02-20T10:07:00Z") },
+... { "_id" : 7, "item" : "Lattes", "price" : 25,"size": "Tall", "quantity" :30, "date" : ISODate("2022-
+uncaught exception: SyntaxError: "" literal not terminated before end of script :
+@(shell):14:100
+> 02-21T10:08:00Z") },
+uncaught exception: SyntaxError: identifier starts immediately after numeric literal :
+@(shell):1:3
+> { "_id" : 8, "item" : "Americanos", "price" : 10, "size":"Grande","quantity" : 21, "date" :
+... ISODate("2022-02-22T14:09:00Z") },
+... { "_id" : 9, "item" : "Cappuccino", "price" : 10, "size":"Grande","quantity" : 17, "date" :
+... ISODate("2022-02-23T14:09:00Z") },
+... { "_id" : 10, "item" : "Americanos", "price" : 8, "size": "Tall","quantity": 15, "date" :
+... ISODate("2022-02-25T14:09:00Z")}]);
+uncaught exception: SyntaxError: unexpected token: ':' :
+@(shell):1:8
+> db.sales.insertMany([
+...   { _id: 1, item: "Americanos", price: 5, size: "Short", quantity: 22, date: ISODate("2022-01-15T08:00:00Z") },
+...   { _id: 2, item: "Cappuccino", price: 6, size: "Short", quantity: 12, date: ISODate("2022-01-16T09:00:00Z") },
+...   { _id: 3, item: "Lattes", price: 15, size: "Grande", quantity: 25, date: ISODate("2022-01-16T09:05:00Z") },
+...   { _id: 4, item: "Mochas", price: 25, size: "Tall", quantity: 11, date: ISODate("2022-02-17T08:00:00Z") },
+...   { _id: 5, item: "Americanos", price: 10, size: "Grande", quantity: 12, date: ISODate("2022-02-18T21:06:00Z") },
+...   { _id: 6, item: "Cappuccino", price: 7, size: "Tall", quantity: 20, date: ISODate("2022-02-20T10:07:00Z") },
+...   { _id: 7, item: "Lattes", price: 25, size: "Tall", quantity: 30, date: ISODate("2022-02-21T10:08:00Z") },
+...   { _id: 8, item: "Americanos", price: 10, size: "Grande", quantity: 21, date: ISODate("2022-02-22T14:09:00Z") },
+...   { _id: 9, item: "Cappuccino", price: 10, size: "Grande", quantity: 17, date: ISODate("2022-02-23T14:09:00Z") },
+...   { _id: 10, item: "Americanos", price: 8, size: "Tall", quantity: 15, date: ISODate("2022-02-25T14:09:00Z") }
+... ]);
+{
+	"acknowledged" : true,
+	"insertedIds" : [
+		1,
+		2,
+		3,
+		4,
+		5,
+		6,
+		7,
+		8,
+		9,
+		10
+	]
+}
+> db.sales.aggregate([{$group: {_id: '$item',averageAmount: { $avg:
+... $multiply: ['$quantity', '$price'] } },},},{ $sort: { averageAmount: 1 } },])
+uncaught exception: SyntaxError: missing } after property list :
+@(shell):2:9
+> db.sales.aggregate([
+...   {
+...     $group: {
+...       _id: '$item',
+...       averageAmount: {
+...         $avg: {
+...           $multiply: ['$quantity', '$price']
+...         }
+...       }
+...     }
+...   },
+...   {
+...     $sort: { averageAmount: 1 }
+...   }
+... ]);
+{ "_id" : "Cappuccino", "averageAmount" : 127.33333333333333 }
+{ "_id" : "Americanos", "averageAmount" : 140 }
+{ "_id" : "Mochas", "averageAmount" : 275 }
+{ "_id" : "Lattes", "averageAmount" : 562.5 }
+> 
+> db.sales.aggregate([{$group: {_id: '$item',averageAmount: { $avg: {
+... $multiply: ['$quantity', '$price'] } },},},{ $match: { averageAmount: { $gt: 150
+... } } },{ $sort: { averageAmount: 1 } },]);
+{ "_id" : "Mochas", "averageAmount" : 275 }
+{ "_id" : "Lattes", "averageAmount" : 562.5 }
+> db.sales.aggregate([{$group: {_id: '$item',itemCount: { $count: {} },},},])
+uncaught exception: Error: command failed: {
+	"ok" : 0,
+	"errmsg" : "unknown group operator '$count'",
+	"code" : 15952,
+	"codeName" : "Location15952"
+} : aggregate failed :
+_getErrorWithCode@src/mongo/shell/utils.js:25:13
+doassert@src/mongo/shell/assert.js:18:14
+_assertCommandWorked@src/mongo/shell/assert.js:705:17
+assert.commandWorked@src/mongo/shell/assert.js:795:16
+DB.prototype._runAggregate@src/mongo/shell/db.js:266:5
+DBCollection.prototype.aggregate@src/mongo/shell/collection.js:1058:12
+@(shell):1:1
+> db.sales.aggregate([{$group: {_id: '$item',itemCount: { $count: {} },},},])
+uncaught exception: Error: command failed: {
+	"ok" : 0,
+	"errmsg" : "unknown group operator '$count'",
+	"code" : 15952,
+	"codeName" : "Location15952"
+} : aggregate failed :
+_getErrorWithCode@src/mongo/shell/utils.js:25:13
+doassert@src/mongo/shell/assert.js:18:14
+_assertCommandWorked@src/mongo/shell/assert.js:705:17
+assert.commandWorked@src/mongo/shell/assert.js:795:16
+DB.prototype._runAggregate@src/mongo/shell/db.js:266:5
+DBCollection.prototype.aggregate@src/mongo/shell/collection.js:1058:12
+@(shell):1:1
+> db.sales.aggregate([
+...   {
+...     $group: {
+...       _id: '$item',
+...       itemCount: { $sum: 1 }
+...     }
+...   }
+... ]);
+{ "_id" : "Americanos", "itemCount" : 4 }
+{ "_id" : "Cappuccino", "itemCount" : 3 }
+{ "_id" : "Mochas", "itemCount" : 1 }
+{ "_id" : "Lattes", "itemCount" : 2 }
+> db.sales.aggregate([
+...   {
+...     $group: {
+...       _id: '$item',
+...       itemCount: { $sum: 1 }
+...     }
+...   },
+...   {
+...     $match: {
+...       itemCount: { $gt: 2 }
+...     }
+...   }
+... ]);
+{ "_id" : "Americanos", "itemCount" : 4 }
+{ "_id" : "Cappuccino", "itemCount" : 3 }
+> db.sales.aggregate([{$group: {_id: null,totalQty: { $sum: '$quantity' },},},{
+... $project: { _id: 0 } },]);
+{ "totalQty" : 185 }
+> db.sales.aggregate([{$group: {_id: '$item',totalQty: { $sum: '$quantity' },},},]);
+{ "_id" : "Americanos", "totalQty" : 70 }
+{ "_id" : "Cappuccino", "totalQty" : 49 }
+{ "_id" : "Mochas", "totalQty" : 11 }
+{ "_id" : "Lattes", "totalQty" : 55 }
+> db.sales.aggregate([{$group: {_id: '$item',totalQty: { $sum: '$quantity' },},},{
+... $sort: { totalQty: -1 } },]);
+{ "_id" : "Americanos", "totalQty" : 70 }
+{ "_id" : "Lattes", "totalQty" : 55 }
+{ "_id" : "Cappuccino", "totalQty" : 49 }
+{ "_id" : "Mochas", "totalQty" : 11 }
+> db.sales.aggregate([{$group:
+... },},},{$project: {_id: 0,},},]);
+uncaught exception: SyntaxError: expected expression, got '}' :
+@(shell):2:0
+> {_id:
+... 65
+... null,maxQty:
+... {
+... $max:
+... '$quantity'
+... db.sales.aggregate([
+...   {
+...     $group: {
+...       _id: null,
+...       maxQty: { $max: '$quantity' }
+...     }
+...   },
+...   {
+...     $project: {
+...       _id: 0,
+...       maxQty: 1
+...     }
+...   }
+... ]);
+... 
+... 
+> 
+> db.sales.aggregate([
+...   {
+...     $group: {
+...       _id: null,
+...       maxQty: { $max: '$quantity' }
+...     }
+...   },
+...   {
+...     $project: {
+...       _id: 0,
+...       maxQty: 1
+...     }
+...   }
+... ]);
+{ "maxQty" : 30 }
+> db.sales.aggregate([{$group: {_id: '$item',maxQty: { $max: '$quantity' },},},]);
+{ "_id" : "Americanos", "maxQty" : 22 }
+{ "_id" : "Cappuccino", "maxQty" : 20 }
+{ "_id" : "Mochas", "maxQty" : 11 }
+{ "_id" : "Lattes", "maxQty" : 30 }
+> db.sales.aggregate([{$group: {_id: '$item',maxQty: { $max: { $multiply:
+... ['$quantity', '$price'] } },},},]);
+{ "_id" : "Americanos", "maxQty" : 210 }
+{ "_id" : "Cappuccino", "maxQty" : 170 }
+{ "_id" : "Mochas", "maxQty" : 275 }
+{ "_id" : "Lattes", "maxQty" : 750 }
